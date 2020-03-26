@@ -1,0 +1,10 @@
+.idea/
+.vscode/
+.pytest_cache/
+__pycache__/
+
+.coverage
+coverage.xml
+
+poetry.lock
+*.egg-info/
