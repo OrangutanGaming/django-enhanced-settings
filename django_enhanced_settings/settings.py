@@ -90,15 +90,6 @@ class Config:
             raise ValueError(f'Value not provided for required setting {key}')
         return default
 
-    # def get_str(self, read_args, get_kwargs) -> str:
-    #     return self._get(read_types.read_str, read_args, **get_kwargs)
-    #
-    # def get_bool(self, read_args, get_kwargs) -> bool:
-    #     return self._get(read_types.read_bool, read_args, **get_kwargs)
-    #
-    # def get_list(self, read_args, get_kwargs) -> list:
-    #     return self._get(read_types.read_list, read_args, **get_kwargs)
-
 
 class Settings:
     def __init__(self, base_dir: str, config_file_path: str = 'config.json', suffix_underscore=False,
@@ -146,7 +137,6 @@ class Settings:
             required=required,
             cache_ttl=cache_ttl,
         )
-        # return ConfigValue(self._config, Config.get_str, read_args, get_kwargs)
         return self.custom_value(get_kwargs, read_types.read_str, read_args, str)
 
     def bool_value(self, key: str, default=None, *, required=False, cache_ttl: int = -1) -> 'ConfigValue':
@@ -174,13 +164,6 @@ class Settings:
 
 
 class ConfigValue:
-    # def __init__(self, config: Config, get_method, value_type, read_args: dict, get_kwargs: dict):
-    #     self._config = config
-    #     self._get_method = get_method
-    #     self.value_type = value_type
-    #     self._read_args = read_args
-    #     self._get_kwargs = get_kwargs
-
     def __init__(self, config: Config, read_function, value_type, read_args: dict, get_kwargs: dict):
         self._config = config
         self._read_function = read_function
@@ -190,7 +173,6 @@ class ConfigValue:
 
     @property
     def value(self):
-        # return self._get_method(self._config, self._read_args, self._get_kwargs)
         return self._config.get(self._read_function, self._read_args, **self._get_kwargs)
 
     def __repr__(self):
@@ -198,41 +180,3 @@ class ConfigValue:
 
     def __str__(self):
         return str(self.value)
-
-
-class StringConfigValue(ConfigValue):
-    def __init__(self, config: Config, key: str, default=None, *, required=False, cache_ttl: int = -1):
-        read_args = dict()
-        get_kwargs = dict(
-            key=key,
-            default=default,
-            required=required,
-            cache_ttl=cache_ttl,
-        )
-        super().__init__(config, Config.get_str, read_args, get_kwargs)
-
-
-class ListConfigValue(ConfigValue):
-    def __init__(self, config: Config, key: str, default=None, *, required=False, cache_ttl: int = -1, split_char=';'):
-        read_args = dict(
-            split_char=split_char,
-        )
-        get_kwargs = dict(
-            key=key,
-            default=default,
-            required=required,
-            cache_ttl=cache_ttl,
-        )
-        super().__init__(config, Config.get_list, read_args, get_kwargs)
-
-
-class BooleanConfigValue(ConfigValue):
-    def __init__(self, config: Config, key: str, default=None, *, required=False, cache_ttl: int = -1):
-        read_args = dict()
-        get_kwargs = dict(
-            key=key,
-            default=default,
-            required=required,
-            cache_ttl=cache_ttl,
-        )
-        super().__init__(config, Config.get_bool, read_args, get_kwargs)
