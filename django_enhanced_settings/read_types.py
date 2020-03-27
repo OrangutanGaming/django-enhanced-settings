@@ -19,7 +19,11 @@ def read_list(value, split_char: str = None) -> list:
         return value
     if isinstance(value, str):
         if split_char is not None:
-            return value.split(split_char)
+            if value.startswith(split_char) is False:
+                out = value.split(split_char)
+                if value.endswith(split_char) is True:
+                    out.pop(-1)
+                return out
     raise ValueError(f'Could not convert {repr(value)} to list')
 
 
