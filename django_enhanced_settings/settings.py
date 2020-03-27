@@ -127,7 +127,7 @@ class Settings:
             out.append(global_variable_name)
         return out
 
-    def getattr(self, global_vars, item: str):
+    def getattr(self, global_vars: dict, item: str):
         if item in self.dir(global_vars):
             name = f'{item}_' if self._suffix_underscore else f'_{item}'
             if name in global_vars:
