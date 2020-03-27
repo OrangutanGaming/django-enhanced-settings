@@ -70,6 +70,9 @@ class Config:
 
     def _check_cache(self, key: str):
         if (cached_value := self._cache.get(key, None)) is not None:
+            if cached_value.expired:
+                del self._cache[key]
+                return
             return cached_value.value
 
     def get(self, read_function, read_args: dict, *, key: str, default, required: bool, cache_ttl: int):
