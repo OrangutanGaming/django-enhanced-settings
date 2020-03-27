@@ -15,10 +15,12 @@ def test_read_str():
 
 
 def test_read_bool():
-    assert read_types.read_bool(True) == True
-    assert read_types.read_bool(False) == False
-    assert read_types.read_bool(0) == False
-    assert read_types.read_bool(1) == True
+    assert read_types.read_bool(True) is True
+    assert read_types.read_bool(False) is False
+    assert read_types.read_bool(0) is False
+    assert read_types.read_bool(1) is True
+    assert read_types.read_bool('f') is False
+    assert read_types.read_bool('t') is True
     with pytest.raises(ValueError, match=r".+ bool"):
         read_types.read_bool(2)
     with pytest.raises(ValueError, match=r".+ bool"):
