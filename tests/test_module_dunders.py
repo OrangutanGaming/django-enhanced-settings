@@ -50,7 +50,6 @@ def test_prefix():
     assert settings.getattr('TEST_1', prefix_global_vars) == 'value 1'
     with pytest.raises(AttributeError):
         settings.getattr(prefix_global_vars, '_TEST_1')
-    assert settings.getattr('TEST_2', prefix_global_vars) == 'test value 2'
 
 
 def test_suffix():
@@ -86,4 +85,3 @@ def test_suffix():
     assert settings.getattr('TEST_1', suffix_global_vars) == 'value 1'
     with pytest.raises(AttributeError):
         settings.getattr(suffix_global_vars, '_TEST_1')
-    assert settings.getattr('TEST_2', suffix_global_vars) == 'test value 2'

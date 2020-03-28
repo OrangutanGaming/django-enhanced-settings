@@ -132,9 +132,6 @@ class Settings:
 
     def getattr(self, name: str, global_vars: dict):
         if name in self.dir(global_vars):
-            if name in global_vars:
-                if isinstance(var := global_vars[name], ConfigValue) is False:
-                    return var
             name = f'{name}_' if self._suffix_underscore else f'_{name}'
             if name in global_vars:
                 if isinstance(var := global_vars[name], ConfigValue):
