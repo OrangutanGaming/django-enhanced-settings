@@ -1,5 +1,3 @@
-import time
-
 from django_enhanced_settings import Settings
 from django_enhanced_settings.settings import CachedConfigValue
 
@@ -13,7 +11,7 @@ def test_settings_cache():
     assert config._check_cache('TEST_2') is 'value 2'
     config._cache_value('TEST_3', 'value 3', 0.1)
     assert config._check_cache('TEST_3') is 'value 3'
-    time.sleep(0.1)
+    config._cache['TEST_3'].cache_end = 1
     assert config._check_cache('TEST_3') is None
 
 
