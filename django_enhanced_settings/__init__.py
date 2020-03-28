@@ -1,3 +1,5 @@
+from importlib.metadata import version
+
 from .settings import Settings
 
-__version__ = '0.1.0'
+__version__ = version('django-enhanced-settings')
