@@ -1,3 +1,5 @@
+import pytest
+
 from django_enhanced_settings import Settings
 from django_enhanced_settings.settings import CachedConfigValue
 
@@ -13,6 +15,8 @@ def test_settings_cache():
     assert config._check_cache('TEST_3') is 'value 3'
     config._cache['TEST_3'].cache_end = 1
     assert config._check_cache('TEST_3') is None
+    with pytest.raises(ValueError):
+        config._cache_value('TEST_4', 'value 4', -2)
 
 
 def test_cached_config_value():
