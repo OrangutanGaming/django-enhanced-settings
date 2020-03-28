@@ -25,17 +25,13 @@ jobs:
       - name: Set Poetry config
         run: |
           poetry config virtualenvs.in-project true
-      - name: Create poetry.lock
-        run: |
-          poetry lock
       - name: Cache Poetry virtualenv
         uses: actions/cache@v1
         id: cache
         with:
           path: .venv
-          key: poetry-venv-${{ runner.os }}-${{ steps.python-version.outputs.version }}-${{ hashFiles('**/poetry.lock') }}
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
+          key: poetry-venv-${{ runner.os }}-${{ steps.python-version.outputs.version }}
+      - name: Install/update package and dependencies
         run: poetry install
       - name: Test with Pytest and measure coverage
         run: poetry run pytest --cov-report=xml --cov=django_enhanced_settings tests/

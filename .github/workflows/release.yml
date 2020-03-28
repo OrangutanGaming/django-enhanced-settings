@@ -31,17 +31,23 @@ jobs:
       - name: Set Poetry config
         run: |
           poetry config virtualenvs.in-project true
-      - name: Create poetry.lock
+      - name: Get package version
+        id: package-version
+        run: echo ::set-output name=version::$(poetry version | grep -Po "\d+\.\d+\.\d+$")
+      - name: Check if tag matches package version
+        if: steps.tag.outputs.tag != steps.package-version.outputs.version
         run: |
-          poetry lock
+          echo Tag: ${{ steps.tag.outputs.tag }}
+          echo Package version: ${{ steps.package-version.outputs.version }}
+          echo Tag and package version do not match
+          exit 1
       - name: Cache Poetry virtualenv
         uses: actions/cache@v1
         id: cache
         with:
           path: .venv
-          key: poetry-venv-${{ runner.os }}-${{ steps.python-version.outputs.version }}-${{ hashFiles('**/poetry.lock') }}
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
+          key: poetry-venv-${{ runner.os }}-${{ steps.python-version.outputs.version }}
+      - name: Install/update package and dependencies
         run: poetry install
       - name: Create release ${{ steps.tag.outputs.tag }}
         id: create_release
