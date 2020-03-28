@@ -139,7 +139,7 @@ class Settings:
         )
         return self.custom_value(get_kwargs, read_types.read_str, read_args, str)
 
-    def bool_value(self, key: str, default=None, *, required=False, cache_ttl: int = -1) -> 'ConfigValue':
+    def boolean_value(self, key: str, default=None, *, required=False, cache_ttl: int = -1) -> 'ConfigValue':
         read_args = dict()
         get_kwargs = dict(
             key=key,
