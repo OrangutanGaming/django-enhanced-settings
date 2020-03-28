@@ -38,6 +38,12 @@ def test_prefix():
 
     prefix_global_vars['TEST_2'] = copy(global_vars['TEST_2'])
     del prefix_global_vars['_TEST_2']
+    prefix_global_vars['TEST_1'] = 'test value 1 1'
+
+    with pytest.raises(ValueError):
+        settings.dir(prefix_global_vars)
+
+    del prefix_global_vars['TEST_1']
 
     dir_prefix = settings.dir(prefix_global_vars)
     assert set(dir_prefix) == {'TEST_1', 'TEST_2'}
@@ -68,6 +74,12 @@ def test_suffix():
 
     suffix_global_vars['TEST_2'] = copy(global_vars['TEST_2'])
     del suffix_global_vars['TEST_2_']
+    suffix_global_vars['TEST_1'] = 'test value 1 1'
+
+    with pytest.raises(ValueError):
+        settings.dir(suffix_global_vars)
+
+    del suffix_global_vars['TEST_1']
 
     dir_prefix = settings.dir(suffix_global_vars)
     assert set(dir_prefix) == {'TEST_1', 'TEST_2'}

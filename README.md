@@ -54,4 +54,8 @@ _INSTALLED_APPS = [...]
 ```py
 SECRET_KEY = settings.string_value('DJANGO_SECRET_KEY', required=True)
 ```
-If you would like to customise this you can write your own `__dir__` and `__getattr__`.
+3. You are not allowed to define 2 variable names that result in the same accessible name. For example, writing the following would raise a `ValueError` in the above example:
+```py
+_SECRET_KEY = settings.string_value('DJANGO_SECRET_KEY', required=True)
+SECRET_KEY = 'SECRET_KEY'
+```

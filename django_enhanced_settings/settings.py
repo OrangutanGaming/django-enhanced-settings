@@ -125,6 +125,8 @@ class Settings:
                 else:
                     if isinstance(global_vars[global_variable_name], ConfigValue) is True:
                         raise ValueError(f'{global_variable_name} does not follow naming pattern but is a ConfigValue')
+            if global_variable_name in out:
+                raise ValueError(f'Variable collision, {global_variable_name} defined twice')
             out.append(global_variable_name)
         return out
 
@@ -137,7 +139,6 @@ class Settings:
             if name in global_vars:
                 if isinstance(var := global_vars[name], ConfigValue):
                     return var.value
-                return var
         raise AttributeError()
 
     def custom_value(self, get_kwargs: dict, read_function, read_args: dict, value_type):
