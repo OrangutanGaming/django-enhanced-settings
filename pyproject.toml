@@ -10,7 +10,7 @@ repository = "https://github.com/OrangutanGaming/django-enhanced-settings"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-google-cloud-secret-manager = { version = "^0.2.0", optional = true }
+google-cloud-secret-manager = {version = "^0.2.0", optional = true}
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.4.1"
