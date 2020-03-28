@@ -5,4 +5,7 @@
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/django-enhanced-settings)
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/django-enhanced-settings)
 
-Allow for more complex and dynamic settings for Django
+Allow for more complex and dynamic settings for Django.
+
+## Extras
+`cloud-secret-manager` - Adds support for Google Cloud Secret Manager
