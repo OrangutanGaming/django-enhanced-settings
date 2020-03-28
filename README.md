@@ -9,3 +9,38 @@ Allow for more complex and dynamic settings for Django.
 
 ## Extras
 `cloud-secret-manager` - Adds support for Google Cloud Secret Manager
+
+## Example
+```py
+import os
+
+from django_enhanced_settings import Settings
+
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+settings = Settings(BASE_DIR)
+
+
+def __dir__():
+    return settings.dir(globals())
+
+
+def __getattr__(name):
+    return settings.getattr(name, globals())
+
+
+_DEBUG = settings.boolean_value('DJANGO_DEBUG', False)
+_ALLOWED_HOSTS = settings.list_value(
+    'DJANGO_ALLOWED_HOSTS',
+    ['localhost'] if _DEBUG.value else [],
+    split_char=';'
+)
+_SECRET_KEY = settings.string_value('DJANGO_SECRET_KEY', required=True)
+INSTALLED_APPS = [...]
+```
+```py
+from django.conf import setings
+
+settings.DEBUG  # By default returns False
+```
