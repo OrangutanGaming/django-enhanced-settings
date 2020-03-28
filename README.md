@@ -44,3 +44,14 @@ from django.conf import setings
 
 settings.DEBUG  # By default returns False
 ```
+
+## Rules
+1. You are not allowed to name a non `ConfigValue` using the naming scheme set for the `Settings` instance (`suffix_underscore`). For example, writing the following would raise a `ValueError` in the above example:
+```py
+_INSTALLED_APPS = [...]
+```
+2. You are not allowed to name a `ConfigValue` without using the naming scheme set for the `Settings` instance (`suffix_underscore`). For example, writing the following would raise a `ValueError` in the above example:
+```py
+SECRET_KEY = settings.string_value('DJANGO_SECRET_KEY', required=True)
+```
+If you would like to customise this you can write your own `__dir__` and `__getattr__`.

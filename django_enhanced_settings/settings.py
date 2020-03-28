@@ -111,19 +111,33 @@ class Settings:
                 continue
             if self._suffix_underscore is True:
                 if global_variable_name.endswith('_'):
+                    if isinstance(global_vars[global_variable_name], ConfigValue) is False:
+                        raise ValueError(f'{global_variable_name} follows naming pattern but is not a ConfigValue')
                     global_variable_name = global_variable_name[:-1]
+                else:
+                    if isinstance(global_vars[global_variable_name], ConfigValue) is True:
+                        raise ValueError(f'{global_variable_name} does not follow naming pattern but is a ConfigValue')
             else:
                 if global_variable_name.startswith('_'):
+                    if isinstance(global_vars[global_variable_name], ConfigValue) is False:
+                        raise ValueError(f'{global_variable_name} follows naming pattern but is not a ConfigValue')
                     global_variable_name = global_variable_name[1:]
+                else:
+                    if isinstance(global_vars[global_variable_name], ConfigValue) is True:
+                        raise ValueError(f'{global_variable_name} does not follow naming pattern but is a ConfigValue')
             out.append(global_variable_name)
         return out
 
     def getattr(self, name: str, global_vars: dict):
         if name in self.dir(global_vars):
+            if name in global_vars:
+                if isinstance(var := global_vars[name], ConfigValue) is False:
+                    return var
             name = f'{name}_' if self._suffix_underscore else f'_{name}'
             if name in global_vars:
                 if isinstance(var := global_vars[name], ConfigValue):
                     return var.value
+                return var
         raise AttributeError()
 
     def custom_value(self, get_kwargs: dict, read_function, read_args: dict, value_type):
