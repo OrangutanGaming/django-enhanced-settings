@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-enhanced-settings"
-version = "0.1.1"
+version = "0.1.2"
 description = "Allow for more complex and dynamic settings for Django"
 authors = ["Nihaal Sangha <18350092+OrangutanGaming@users.noreply.github.com>"]
 license = "MIT"
