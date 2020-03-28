@@ -88,7 +88,7 @@ class Config:
             return value
         if required is True:
             raise ValueError(f'Value not provided for required setting {key}')
-        return default
+        return default if callable(default) is False else default()
 
 
 class Settings:
