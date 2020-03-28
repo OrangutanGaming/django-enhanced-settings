@@ -59,3 +59,4 @@ SECRET_KEY = settings.string_value('DJANGO_SECRET_KEY', required=True)
 _SECRET_KEY = settings.string_value('DJANGO_SECRET_KEY', required=True)
 SECRET_KEY = 'SECRET_KEY'
 ```
+If you would like to customise these rules you can write your own `__dir__` and `__getattr__`.
