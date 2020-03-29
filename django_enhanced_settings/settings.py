@@ -86,7 +86,8 @@ class Config:
             value = read_function(value, **read_args)
             self._cache_value(key, value, cache_ttl)
             return value
-        if required is True:
+        is_required = required if callable(required) is False else required()
+        if is_required is True:
             raise ValueError(f'Value not provided for required setting {key}')
         return default if callable(default) is False else default()
 
