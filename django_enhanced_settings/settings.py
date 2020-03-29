@@ -32,7 +32,9 @@ class Config:
         self._GCP_PROJECT_ID = gcp_project_id
 
         self._config_file = None
+        self._config_file_last_fetch = None
         self._env_vars = None
+        self._env_vars_last_fetch = None
         self._secret_manager_secrets = {}
 
         self._cache = {}
@@ -43,19 +45,27 @@ class Config:
                 self._config_file = json.load(fp)
         except FileNotFoundError:
             self._config_file = {}
+        self._config_file_last_fetch = time.time()
 
     def _load_env_vars(self):
         self._env_vars = copy(os.environ)
+        self._env_vars_last_fetch = time.time()
 
-    def _fetch_config_file_value(self, key: str):
+    def _needs_reloading(self, cache_ttl: int, last_fetch: float):
+        if cache_ttl == -1:
+            return False
+        if cache_ttl + time.time() >= last_fetch:
+            return True
+
+    def _fetch_config_file_value(self, key: str, cache_ttl: float):
         """Returns a list, dict or str, or None if key not found."""
-        if self._config_file is None:
+        if self._config_file is None or self._needs_reloading(cache_ttl, self._config_file_last_fetch) is True:
             self._load_config_file()
         return self._config_file.get(key, None)
 
-    def _fetch_env_vars_value(self, key: str):
+    def _fetch_env_vars_value(self, key: str, cache_ttl: float):
         """Returns a str or None if key not found."""
-        if self._env_vars is None:
+        if self._env_vars is None or self._needs_reloading(cache_ttl, self._env_vars_last_fetch) is True:
             self._load_env_vars()
         return self._env_vars.get(key, None)
 
@@ -63,8 +73,6 @@ class Config:
         if cache_ttl == 0:
             # Do not cache
             return
-        if cache_ttl < -1:
-            raise ValueError('Cache TTL must be >= -1')
         self._cache[key] = CachedConfigValue(key, value, cache_ttl)
         return value
 
@@ -76,11 +84,13 @@ class Config:
             return cached_value.value
 
     def get(self, read_function, read_args: dict, *, key: str, default, required: bool, cache_ttl: int):
+        if cache_ttl < -1:
+            raise ValueError('Cache TTL must be >= -1')
         if value := self._check_cache(key):
             return value
-        if value := self._fetch_env_vars_value(key):
+        if value := self._fetch_env_vars_value(key, cache_ttl):
             pass
-        elif value := self._fetch_config_file_value(key):
+        elif value := self._fetch_config_file_value(key, cache_ttl):
             pass
         if value is not None:
             value = read_function(value, **read_args)
@@ -131,13 +141,31 @@ class Settings:
             out.append(global_variable_name)
         return out
 
+    def _generate_original_variable_name(self, name: str) -> str:
+        return f'{name}_' if self._suffix_underscore else f'_{name}'
+
     def getattr(self, name: str, global_vars: dict):
         if name in self.dir(global_vars):
-            name = f'{name}_' if self._suffix_underscore else f'_{name}'
+            name = self._generate_original_variable_name(name)
             if name in global_vars:
                 if isinstance(var := global_vars[name], ConfigValue):
                     return var.value
         raise AttributeError()
+
+    def cache_static_values(self, global_vars: dict, minimum_cache_ttl: int = -1):
+        for name in self.dir(global_vars):
+            if name not in global_vars:
+                config_value = global_vars[self._generate_original_variable_name(name)]
+                cache_ttl = config_value._get_kwargs['cache_ttl']
+                if cache_ttl == -1:
+                    config_value.value
+                    continue
+                if minimum_cache_ttl == -1:
+                    continue
+                if minimum_cache_ttl < 0:
+                    raise ValueError('Minimum cache ttl must be at least 0')
+                if cache_ttl >= minimum_cache_ttl:
+                    config_value.value
 
     def custom_value(self, get_kwargs: dict, read_function, read_args: dict, value_type):
         return ConfigValue(self._config, read_function, value_type, read_args, get_kwargs)

@@ -51,6 +51,8 @@ def test_prefix():
     with pytest.raises(AttributeError):
         settings.getattr(prefix_global_vars, '_TEST_1')
 
+    settings.cache_static_values(prefix_global_vars)
+
 
 def test_suffix():
     suffix_global_vars = copy(global_vars)
@@ -85,3 +87,5 @@ def test_suffix():
     assert settings.getattr('TEST_1', suffix_global_vars) == 'value 1'
     with pytest.raises(AttributeError):
         settings.getattr(suffix_global_vars, '_TEST_1')
+
+    settings.cache_static_values(suffix_global_vars)
