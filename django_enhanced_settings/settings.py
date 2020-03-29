@@ -39,7 +39,7 @@ class Config:
 
     def _load_config_file(self):
         try:
-            with open(os.path.join(self.BASE_DIR, self.CONFIG_FILE_PATH)) as fp:
+            with open(os.path.join(self._BASE_DIR, self._CONFIG_FILE_PATH)) as fp:
                 self._config_file = json.load(fp)
         except FileNotFoundError:
             self._config_file = {}
