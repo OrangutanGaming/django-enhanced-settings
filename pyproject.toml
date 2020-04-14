@@ -2,11 +2,11 @@
 name = "django-enhanced-settings"
 version = "0.2.4"
 description = "Allow for more complex and dynamic settings for Django"
-authors = ["Nihaal Sangha <18350092+OrangutanGaming@users.noreply.github.com>"]
+authors = ["Nihaal Sangha <me@niha.al>"]
 license = "MIT"
 include = ["LICENSE"]
 readme = "README.md"
-repository = "https://github.com/OrangutanGaming/django-enhanced-settings"
+repository = "https://github.com/nihaals/django-enhanced-settings"
 
 [tool.poetry.dependencies]
 python = "^3.8"
