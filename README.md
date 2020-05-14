@@ -52,7 +52,7 @@ _INSTALLED_APPS = [...]
 ```
 2. You are not allowed to name a `ConfigValue` without using the naming scheme set for the `Settings` instance (`suffix_underscore`). For example, writing the following would raise a `ValueError` in the above example:
 ```py
-SECRET_KEY = settings.string_value('DJANGO_SECRET_KEY', required=True)
+USE_TZ = settings.string_value('DJANGO_USE_TZ')
 ```
 3. You are not allowed to define 2 variable names that result in the same accessible name. For example, writing the following would raise a `ValueError` in the above example:
 ```py
